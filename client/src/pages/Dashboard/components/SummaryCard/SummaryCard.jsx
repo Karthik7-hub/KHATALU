@@ -62,7 +62,11 @@ export default function SummaryCard({ totalExpenses, perHead, membersCount, bala
                 <div className="user-avatar" style={{
                   background: isPositive ? 'linear-gradient(135deg, var(--accent), #6366f1)' : isNegative ? 'linear-gradient(135deg, var(--danger), #ef444490)' : 'rgba(255,255,255,0.08)'
                 }}>
-                  {b.name?.charAt(0).toUpperCase()}
+                  {b.avatarUrl ? (
+                    <img src={b.avatarUrl} alt={b.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                  ) : (
+                    b.name?.charAt(0).toUpperCase()
+                  )}
                 </div>
                 <span className="user-name">{b.name}</span>
               </div>

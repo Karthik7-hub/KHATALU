@@ -216,12 +216,24 @@ export default function AddExpenseSheet({ roomId, members, categories, initialDa
                   <label className="form-label">Transfer Details</label>
                   <div className="settlement-users-row" style={{ padding: "16px", background: "rgba(255,255,255,0.03)", borderRadius: "14px", border: "1px solid var(--border-light)" }}>
                     <div className="user-node debtor">
-                      <div className="avatar">{members?.find(m => m._id === paidBy)?.name?.charAt(0)}</div>
+                      <div className="avatar">
+                        {members?.find(m => m._id === paidBy)?.avatarUrl ? (
+                          <img src={members.find(m => m._id === paidBy).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                        ) : (
+                          members?.find(m => m._id === paidBy)?.name?.charAt(0)
+                        )}
+                      </div>
                       <span>{members?.find(m => m._id === paidBy)?.name}</span>
                     </div>
                     <div className="transfer-path"></div>
                     <div className="user-node creditor">
-                      <div className="avatar">{members?.find(m => m._id === selectedMembers[0])?.name?.charAt(0)}</div>
+                      <div className="avatar">
+                        {members?.find(m => m._id === selectedMembers[0])?.avatarUrl ? (
+                          <img src={members.find(m => m._id === selectedMembers[0]).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                        ) : (
+                          members?.find(m => m._id === selectedMembers[0])?.name?.charAt(0)
+                        )}
+                      </div>
                       <span>{members?.find(m => m._id === selectedMembers[0])?.name}</span>
                     </div>
                   </div>
@@ -242,7 +254,13 @@ export default function AddExpenseSheet({ roomId, members, categories, initialDa
                           className={`member-chip ${selectedMembers.includes(m._id) ? "active" : ""}`}
                           onClick={() => toggleMember(m._id)}
                         >
-                          <span className="chip-avatar">{m.name?.charAt(0)}</span>
+                          <span className="chip-avatar">
+                            {m.avatarUrl ? (
+                              <img src={m.avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                            ) : (
+                              m.name?.charAt(0)
+                            )}
+                          </span>
                           {m.name?.split(" ")[0]}
                         </button>
                       ))}

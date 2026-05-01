@@ -118,14 +118,26 @@ export default function SettlementsSheet({ settlements: minimizedSettlements, ex
                   >
                     <div className="settlement-users-row">
                       <div className="user-node debtor">
-                        <div className="avatar">{debtor.name.charAt(0)}</div>
+                        <div className="avatar">
+                          {debtor.avatarUrl ? (
+                            <img src={debtor.avatarUrl} alt={debtor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                          ) : (
+                            debtor.name.charAt(0).toUpperCase()
+                          )}
+                        </div>
                         <span>{tx.from === currentUserId ? "You" : debtor.name}</span>
                       </div>
 
                       <div className="transfer-path"></div>
 
                       <div className="user-node creditor">
-                        <div className="avatar">{creditor.name.charAt(0)}</div>
+                        <div className="avatar">
+                          {creditor.avatarUrl ? (
+                            <img src={creditor.avatarUrl} alt={creditor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                          ) : (
+                            creditor.name.charAt(0).toUpperCase()
+                          )}
+                        </div>
                         <span>{tx.to === currentUserId ? "You" : creditor.name}</span>
                       </div>
                     </div>

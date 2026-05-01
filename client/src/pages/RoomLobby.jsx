@@ -9,14 +9,17 @@ import {
   HiOutlineBars3,
   HiOutlineXMark,
   HiOutlineCalendarDays,
+  HiOutlinePencil,
+  HiOutlineCheck,
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
 import { useRoom } from "../context/RoomContext";
+import GlassDialog from "../components/GlassDialog/GlassDialog";
 import "./RoomLobby.css";
 
 export default function RoomLobby() {
-  const { user, logout } = useAuth();
-  const { rooms, loading, fetchMyRooms, createRoom, joinRoom } = useRoom();
+  const { user, logout, updateProfile } = useAuth();
+  const { rooms, loading, fetchMyRooms, createRoom, joinRoom, leaveRoom } = useRoom();
   const navigate = useNavigate();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -24,6 +27,10 @@ export default function RoomLobby() {
   const [roomName, setRoomName] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  
+  const [editingName, setEditingName] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [showLeaveConfirm, setShowLeaveConfirm] = useState(null);
 
   useEffect(() => {
     fetchMyRooms();
@@ -55,6 +62,28 @@ export default function RoomLobby() {
       navigate(`/room/${room.roomId}`);
     } catch { } 
     finally { setSubmitting(false); }
+  };
+
+  const handleUpdateName = async () => {
+    if (!newName.trim() || newName === user.name) {
+      setEditingName(false);
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await updateProfile(newName.trim());
+      setEditingName(false);
+    } catch { }
+    finally { setSubmitting(false); }
+  };
+
+  const handleLeaveRoom = async () => {
+    if (!showLeaveConfirm) return;
+    try {
+      await leaveRoom(showLeaveConfirm);
+      setShowLeaveConfirm(null);
+      fetchMyRooms(); // Refresh the list
+    } catch { }
   };
 
   const openDrawerWith = (mode) => {
@@ -113,7 +142,35 @@ export default function RoomLobby() {
                     {user?.name?.charAt(0)?.toUpperCase()}
                   </div>
                   <div className="drawer-user-info">
-                    <h3>{user?.name}</h3>
+                    {editingName ? (
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <input
+                          type="text"
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                          className="drawer-input"
+                          style={{ padding: "4px 8px", fontSize: "14px", width: "120px", marginBottom: 0 }}
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleUpdateName();
+                            if (e.key === "Escape") setEditingName(false);
+                          }}
+                        />
+                        <button onClick={handleUpdateName} disabled={submitting} style={{ background: "var(--primary)", color: "#fff", border: "none", borderRadius: "4px", padding: "6px", cursor: "pointer" }}>
+                          <HiOutlineCheck size={14} />
+                        </button>
+                        <button onClick={() => setEditingName(false)} style={{ background: "transparent", color: "var(--text-dim)", border: "none", cursor: "pointer" }}>
+                          <HiOutlineXMark size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <h3>{user?.name}</h3>
+                        <button onClick={() => { setNewName(user?.name); setEditingName(true); }} style={{ background: "transparent", color: "var(--text-dim)", border: "none", cursor: "pointer", padding: "4px" }}>
+                          <HiOutlinePencil size={14} />
+                        </button>
+                      </div>
+                    )}
                     <p>{user?.email}</p>
                   </div>
                 </div>
@@ -228,7 +285,19 @@ export default function RoomLobby() {
                   <span className="join-code-pill">{room.joinCode}</span>
                 </div>
                 <div className="room-card-body">
-                  <h2>{room.roomName}</h2>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h2>{room.roomName}</h2>
+                    {room.adminId?._id !== user?._id && room.adminId !== user?._id && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setShowLeaveConfirm(room._id); }}
+                        className="icon-btn danger" 
+                        style={{ padding: "4px", background: "rgba(239, 68, 68, 0.1)", borderRadius: "6px", border: "none", cursor: "pointer", color: "#ef4444" }}
+                        title="Leave Room"
+                      >
+                        <HiOutlineArrowRightStartOnRectangle size={16} />
+                      </button>
+                    )}
+                  </div>
                   <div className="room-meta">
                     <div className="room-meta-item">
                       <HiOutlineUsers size={16} />
@@ -266,6 +335,18 @@ export default function RoomLobby() {
           </motion.div>
         )}
       </div>
+
+      <GlassDialog
+        open={!!showLeaveConfirm}
+        icon="danger"
+        title="Leave Room"
+        message="Are you sure you want to leave this room? You won't be able to see expenses until you rejoin."
+        confirmText="Leave"
+        cancelText="Cancel"
+        danger={true}
+        onConfirm={handleLeaveRoom}
+        onCancel={() => setShowLeaveConfirm(null)}
+      />
     </div>
   );
 }

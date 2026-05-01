@@ -136,11 +136,27 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const updateProfile = async (name) => {
+    try {
+      const response = await api.put("/auth/update-profile", { name });
+      const updatedUser = response.data.user;
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      toast.success(response.data.message || "Profile updated");
+      return updatedUser;
+    } catch (error) {
+      console.error("Update profile failed:", error);
+      toast.error(error.response?.data?.error || "Failed to update profile");
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
     loginWithGoogle,
     logout,
+    updateProfile,
     isAuthenticated: !!user,
   };
 

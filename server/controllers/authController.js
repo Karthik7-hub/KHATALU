@@ -110,3 +110,45 @@ export const refreshToken = async (req, res) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 };
+
+/**
+ * PUT /api/auth/update-profile
+ * Updates the user's profile (currently just the name).
+ */
+export const updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+    
+    if (!name || name.trim().length === 0) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+
+    if (name.trim().length > 30) {
+      return res.status(400).json({ error: "Name cannot exceed 30 characters" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { name: name.trim() } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({
+      user: {
+        _id: updatedUser._id,
+        googleId: updatedUser.googleId,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        avatarUrl: updatedUser.avatarUrl,
+      },
+      message: "Profile updated successfully"
+    });
+  } catch (error) {
+    console.error("Update profile error:", error.message);
+    return res.status(500).json({ error: "Failed to update profile" });
+  }
+};
