@@ -120,7 +120,7 @@ export default function SettlementsSheet({ settlements: minimizedSettlements, ex
                       <div className="user-node debtor">
                         <div className="avatar">
                           {debtor.avatarUrl ? (
-                            <img src={debtor.avatarUrl} alt={debtor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                            <img src={debtor.avatarUrl} alt={debtor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                           ) : (
                             debtor.name.charAt(0).toUpperCase()
                           )}
@@ -133,7 +133,7 @@ export default function SettlementsSheet({ settlements: minimizedSettlements, ex
                       <div className="user-node creditor">
                         <div className="avatar">
                           {creditor.avatarUrl ? (
-                            <img src={creditor.avatarUrl} alt={creditor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                            <img src={creditor.avatarUrl} alt={creditor.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                           ) : (
                             creditor.name.charAt(0).toUpperCase()
                           )}

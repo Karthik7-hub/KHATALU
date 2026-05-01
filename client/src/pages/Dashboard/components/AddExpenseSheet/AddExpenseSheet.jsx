@@ -218,7 +218,7 @@ export default function AddExpenseSheet({ roomId, members, categories, initialDa
                     <div className="user-node debtor">
                       <div className="avatar">
                         {members?.find(m => m._id === paidBy)?.avatarUrl ? (
-                          <img src={members.find(m => m._id === paidBy).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                          <img src={members.find(m => m._id === paidBy).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                         ) : (
                           members?.find(m => m._id === paidBy)?.name?.charAt(0)
                         )}
@@ -229,7 +229,7 @@ export default function AddExpenseSheet({ roomId, members, categories, initialDa
                     <div className="user-node creditor">
                       <div className="avatar">
                         {members?.find(m => m._id === selectedMembers[0])?.avatarUrl ? (
-                          <img src={members.find(m => m._id === selectedMembers[0]).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                          <img src={members.find(m => m._id === selectedMembers[0]).avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                         ) : (
                           members?.find(m => m._id === selectedMembers[0])?.name?.charAt(0)
                         )}
@@ -256,7 +256,7 @@ export default function AddExpenseSheet({ roomId, members, categories, initialDa
                         >
                           <span className="chip-avatar">
                             {m.avatarUrl ? (
-                              <img src={m.avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                              <img src={m.avatarUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                             ) : (
                               m.name?.charAt(0)
                             )}

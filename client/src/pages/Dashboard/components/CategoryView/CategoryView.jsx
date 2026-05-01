@@ -123,7 +123,7 @@ export default function CategoryView({ categories, expenses, members, currentUse
                                 background: b.balance > 0.01 ? `linear-gradient(135deg, ${cat.color}, ${cat.color}90)` : b.balance < -0.01 ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.08)'
                               }}>
                                 {b.avatarUrl ? (
-                                  <img src={b.avatarUrl} alt={b.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                                  <img src={b.avatarUrl} alt={b.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                                 ) : (
                                   b.name?.charAt(0)
                                 )}
@@ -235,7 +235,7 @@ export default function CategoryView({ categories, expenses, members, currentUse
                                 background: isPos ? `linear-gradient(135deg, ${selectedCat.color}, ${selectedCat.color}90)` : isNeg ? 'linear-gradient(135deg, #ef4444, #dc262690)' : 'rgba(255,255,255,0.08)'
                               }}>
                                 {b.avatarUrl ? (
-                                  <img src={b.avatarUrl} alt={b.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                                  <img src={b.avatarUrl} alt={b.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} referrerPolicy="no-referrer" />
                                 ) : (
                                   b.name?.charAt(0)
                                 )}
