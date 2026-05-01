@@ -21,6 +21,7 @@ import SettlementsSheet from "./components/SettlementsSheet/SettlementsSheet";
 import ViewToggle from "./components/ViewToggle/ViewToggle";
 import CategoryView from "./components/CategoryView/CategoryView";
 import GlassDialog from "../../components/GlassDialog/GlassDialog";
+import MembersList from "../../components/MembersList";
 
 import "./Dashboard.css";
 
@@ -35,6 +36,7 @@ export default function Dashboard() {
   const [initialSettleData, setInitialSettleData] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [view, setView] = useState("all"); // "all" | "categories"
+  const [showSettlements, setShowSettlements] = useState(false);
 
   const loadDashboard = useCallback(() => {
     if (roomId) fetchDashboard(roomId);
@@ -146,17 +148,29 @@ export default function Dashboard() {
               transition={{ duration: 0.15 }}
             >
               <div className="dashboard-grid">
-                <ExpenseTimeline 
-                  expenses={expenses} 
-                  onExpenseClick={setSelectedExpense}
-                />
+                <div className="grid-left" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <ExpenseTimeline 
+                    expenses={expenses} 
+                    onExpenseClick={setSelectedExpense}
+                  />
+                </div>
                 
-                <SummaryCard 
-                  totalExpenses={totalExpenses}
-                  perHead={perHead}
-                  membersCount={roomDetails.members.length}
-                  balances={balances}
-                />
+                <div className="grid-right" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <SummaryCard 
+                    totalExpenses={totalExpenses}
+                    perHead={perHead}
+                    membersCount={roomDetails.members.length}
+                    balances={balances}
+                    onViewSettlements={() => setShowSettlements(true)}
+                  />
+                  <MembersList 
+                    members={roomDetails.members} 
+                    adminId={adminIdStr} 
+                    currentUserId={user?._id} 
+                    roomId={roomId} 
+                    onRefresh={loadDashboard} 
+                  />
+                </div>
               </div>
             </motion.div>
           ) : (
@@ -219,6 +233,26 @@ export default function Dashboard() {
             currentUserId={user?._id}
             onClose={() => setSelectedExpense(null)}
             onDelete={handleDeleteExpense}
+          />
+        )}
+
+        {showSettlements && (
+          <SettlementsSheet
+            settlements={dashboard?.minimizedSettlements || []}
+            expenses={expenses}
+            members={roomDetails.members}
+            currentUserId={user?._id}
+            onClose={() => setShowSettlements(false)}
+            onRecordSettlement={(tx) => {
+              setInitialSettleData({
+                amount: tx.amount,
+                paidBy: tx.from,
+                splitAmong: [tx.to],
+                isSettlement: true,
+              });
+              setShowSettlements(false);
+              setShowExpenseModal(true);
+            }}
           />
         )}
       </AnimatePresence>

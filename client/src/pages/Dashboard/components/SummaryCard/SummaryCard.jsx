@@ -30,8 +30,16 @@ export default function SummaryCard({ totalExpenses, perHead, membersCount, bala
       </div>
 
       <div className="balances-section">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
           <span className="summary-title" style={{ fontSize: "0.75rem", margin: 0 }}>Current Balances</span>
+          <button 
+            onClick={onViewSettlements}
+            className="btn btn-secondary"
+            style={{ padding: "4px 10px", fontSize: "0.75rem", background: "rgba(255,255,255,0.05)" }}
+          >
+            <HiOutlineArrowsRightLeft size={14} style={{ marginRight: "4px", display: "inline-block", verticalAlign: "middle" }} />
+            <span style={{ verticalAlign: "middle" }}>Transfers</span>
+          </button>
         </div>
         
         {balances?.map((b, index) => {

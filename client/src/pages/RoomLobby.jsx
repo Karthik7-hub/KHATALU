@@ -139,7 +139,11 @@ export default function RoomLobby() {
               <div className="drawer-header">
                 <div className="drawer-user">
                   <div className="drawer-avatar">
-                    {user?.name?.charAt(0)?.toUpperCase()}
+                    {user?.avatarUrl ? (
+                      <img src={user.avatarUrl} alt={user.name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                    ) : (
+                      user?.name?.charAt(0)?.toUpperCase()
+                    )}
                   </div>
                   <div className="drawer-user-info">
                     {editingName ? (
