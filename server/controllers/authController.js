@@ -1,7 +1,5 @@
 import admin from "firebase-admin";
-import mongoose from "mongoose";
 import User from "../models/User.js";
-import connectDB from "../utils/connectDB.js";
 
 /**
  * Cookie configuration for the auth token.
@@ -28,14 +26,6 @@ const getCookieOptions = () => ({
  */
 export const login = async (req, res) => {
   try {
-    console.log("LOGIN: Incoming request body keys:", Object.keys(req.body || {}));
-
-    // Ensure MongoDB is connected (critical for Vercel serverless)
-    if (mongoose.connection.readyState !== 1) {
-      console.log("LOGIN: MongoDB not connected, reconnecting...");
-      await connectDB();
-    }
-
     const { firebaseToken } = req.body;
 
     if (!firebaseToken) {

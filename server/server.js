@@ -78,9 +78,20 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
-// ─── Health Check ────────────────────────────────────────────────────────────
+// ─── Health Check (no DB needed) ────────────────────────────────────────────
 app.get("/", (_req, res) => {
-  res.json({ status: "ok", message: "Bill Manager API is running" });
+  res.json({ status: "ok", message: "Khatalu API is running" });
+});
+
+// ─── Database Middleware (ensures DB is connected before any API route) ──────
+app.use("/api", async (_req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB middleware error:", err.message);
+    res.status(503).json({ error: "Database unavailable. Please try again." });
+  }
 });
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
@@ -95,12 +106,9 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Internal server error" });
 });
 
-// ─── Database Connection & Server Start ──────────────────────────────────────
-
-// ─── Server Start (for local development) ────────────────────────────────────
+// ─── Server Start (local development only) ──────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-// Only start listening when NOT on Vercel (Vercel handles this itself)
 if (!process.env.VERCEL) {
   connectDB()
     .then(() => {
@@ -112,11 +120,7 @@ if (!process.env.VERCEL) {
       console.error("❌ Failed to start server:", err.message);
       process.exit(1);
     });
-} else {
-  // On Vercel, connect eagerly but don't crash if it fails
-  connectDB().catch((err) => {
-    console.error("⚠️ Initial MongoDB connection failed on Vercel:", err.message);
-  });
 }
 
 export default app;
+
