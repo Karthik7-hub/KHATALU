@@ -69,9 +69,37 @@ initFirebase();
 // ─── Express App ─────────────────────────────────────────────────────────────
 const app = express();
 
+// Build allowed origins list from CLIENT_URL (supports comma-separated values)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
+// Add CLIENT_URL (can be comma-separated for multiple origins)
+if (process.env.CLIENT_URL) {
+  process.env.CLIENT_URL.split(",").forEach((url) => {
+    const trimmed = url.trim();
+    if (trimmed) allowedOrigins.push(trimmed);
+  });
+}
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (server-to-server, Postman, etc.)
+      if (!origin) return callback(null, true);
+
+      // Check exact match or Vercel preview URL pattern
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
+      }
+
+      console.warn("CORS blocked origin:", origin);
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
