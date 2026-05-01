@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="22" fill="#0a0f1e"/>
+  <rect width="100" height="100" rx="22" fill="url(#bg-grad)" opacity="0.6"/>
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e1060"/>
+      <stop offset="100%" stop-color="#0a0f1e"/>
+    </linearGradient>
+    <linearGradient id="rupee-grad" x1="20" y1="20" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <!-- Glow backdrop -->
+  <circle cx="50" cy="50" r="30" fill="#f59e0b" opacity="0.08"/>
+  <!-- ₹ symbol - hand-drawn paths -->
+  <!-- Top bar -->
+  <line x1="30" y1="28" x2="70" y2="28" stroke="url(#rupee-grad)" stroke-width="6" stroke-linecap="round"/>
+  <!-- Second bar -->
+  <line x1="30" y1="40" x2="65" y2="40" stroke="url(#rupee-grad)" stroke-width="6" stroke-linecap="round"/>
+  <!-- Vertical stem -->
+  <line x1="38" y1="28" x2="38" y2="72" stroke="url(#rupee-grad)" stroke-width="6" stroke-linecap="round"/>
+  <!-- Diagonal -->
+  <line x1="65" y1="40" x2="38" y2="72" stroke="url(#rupee-grad)" stroke-width="6" stroke-linecap="round"/>
+</svg>
